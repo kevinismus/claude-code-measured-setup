@@ -21,7 +21,7 @@ Every configuration passed every graded task. Costs are the API-equivalent `tota
 What the numbers say:
 
 - **Output is a small share of the work.** About 1,000 output tokens per task, against 110,000 to 135,000 tokens of context read or cached. Terse modes shorten what you read; they barely change what you use.
-- **Fixed context adds up.** Plain Claude Code sent about 38,400 tokens on a one-line prompt. The add-ons together added about 5,300 (caveman about 1,900, ponytail about 650, the terse output style about 500, the rest under 350 each). That prefix rides along on every turn.
+- **Fixed context adds up.** With no plugins (Claude Code's own prompt and tools, my CLAUDE.md and the skills list), a one-line prompt sent about 38,400 tokens. The add-ons together added about 5,300 (caveman about 1,900, ponytail about 650, the terse output style about 500, the rest under 350 each). That prefix rides along on every turn.
 - **Tools can misfire together.** A first run, with only `Bash(python3:*)` allowed, showed +44% cost and nearly twice the turns. [RTK](https://github.com/rtk-ai/rtk) rewrites `ls` to `rtk ls`, the rewritten commands matched no allow rule, so each was denied and retried. Auto mode removed the denials. Those first-round results are kept in `bench/results/round1-acceptedits` for reference.
 - **Higher effort mostly bought time.** Opus at xhigh cost about 4% more than at high, with 34% more output tokens and slower runs, for the same results here.
 
