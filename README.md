@@ -2,7 +2,7 @@
 
 A small, generic Claude Code setup, and the benchmark that shaped it.
 
-I ran Claude Code with several "token-saving" add-ons stacked together and assumed they were saving usage. When I measured, answers were 37% shorter but each task cost 31% more than plain Claude Code. This repository has the setup I kept, the harness I used and the raw results, so you can check the numbers or run them against your own configuration.
+I ran Claude Code with several "token-saving" add-ons stacked together and assumed they were saving usage. When I measured, answers were 37% shorter but each task cost 31% more than running without them. This repository has the setup I kept, the harness I used and the raw results, so you can check the numbers or run them against your own configuration.
 
 ## Results
 
@@ -10,7 +10,7 @@ Five fixed tasks on a small Python repo (answer a code question, fix a failing t
 
 | Configuration | Cost per task | Answer length | Output tokens | Turns |
 |---|---|---|---|---|
-| Plain Claude Code, no add-ons | $0.083 | 1,085 chars | 947 | 3.0 |
+| No plugins or hooks | $0.083 | 1,085 chars | 947 | 3.0 |
 | Full stack (terse output style, caveman ultra, ponytail ultra, hooks) | $0.109 | 688 chars | 923 | 3.9 |
 | Cleaned-up stack (caveman ultra, ponytail full, hooks) | $0.103 | 675 chars | 796 | 3.2 |
 | Cleaned-up stack on Opus, high effort | $0.229 | 910 chars | 1,097 | 3.6 |
