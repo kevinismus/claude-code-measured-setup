@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T4_review",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.08356909999999998,
+ "out_tok": 716,
+ "in_tok": 6,
+ "cache_read": 102018,
+ "cache_write": 16517,
+ "turns": 3,
+ "secs": 11.7,
+ "answer_chars": 1104,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "**Bug: `remove_sold_out` mutates the list while iterating over it, so it skips items.**\n\nRemoving an element shifts the later ones left, and the iterator then jumps past the next element. With `[a(0), b(0), c(3)]`, it removes `a`, skips `b`, and returns `[b, c]`. Any run of adjacent sold-out items leaves every second one behind.\n\nA second problem: `items.remove(i)` compares with `==`. If the item class defines `__eq__` (a dataclass does by default), it can remove an earlier equal item rather than the one being visited.\n\nFix, keeping the in-place behaviour the docstring promises:\n\n```python\ndef remove_sold_out(items):\n    \"\"\"Drop items with no stock left, in place.\"\"\"\n    items[:] = [i for i in items if i.qty != 0]\n    return items\n```\n\nThe change also has a design problem. `qty == 0` misses negative quantities, which can appear from oversold stock. Use `i.qty <= 0` if those should be dropped too. The function also returns the same list it mutates, so callers can't tell it changed in place. Consider returning `None` as `list.sort` does, or not mutating at all.\n\nI did not apply the change."
+}

@@ -1,0 +1,13 @@
+--- a/inventory.py
++++ b/inventory.py
+@@ -30,3 +30,10 @@ def low_stock(items, threshold=5):
+     """Items that need reordering."""
+     return [i for i in items if i.qty < threshold]
++
++
++def remove_sold_out(items):
++    """Drop items with no stock left, in place."""
++    for i in items:
++        if i.qty == 0:
++            items.remove(i)
++    return items

@@ -1,0 +1,42 @@
+{
+ "cfg": "A_current",
+ "task": "T3_feature",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.12192430000000001,
+ "out_tok": 1614,
+ "in_tok": 6,
+ "cache_read": 111895,
+ "cache_write": 23613,
+ "turns": 6,
+ "secs": 17.3,
+ "answer_chars": 458,
+ "changed_lines": 18,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la && cat inventory.py && ls .claude 2>/dev/null; cat test_*.py 2>/dev/null | head -50\", \"description\": \"List dir and show ",
+  "Edit:{\"replace_all\": false, \"file_path\": \"<run-dir>",
+  "Edit:{\"replace_all\": false, \"file_path\": \"<run-dir>",
+  "Edit:{\"replace_all\": false, \"file_path\": \"<run-dir>",
+  "Bash:{\"command\": \"python3 -m unittest -v 2>&1 | tail -20\", \"description\": \"Run unit tests\"}"
+ ],
+ "answer": "`restock(items, sku, amount)` is in `inventory.py`. It raises `KeyError(sku)` for an unknown sku. Two new tests cover it, a successful restock and the unknown-sku case, and both pass.\n\n`test_apply_discount` fails, and it did before my change. `apply_discount` returns `price * percent / 100`, which is the discount amount (10), not the discounted price (90). I left it alone.\n\n`restock` does not validate `amount`, so a negative value silently reduces stock."
+}

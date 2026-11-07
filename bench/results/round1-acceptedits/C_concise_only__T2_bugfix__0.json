@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T2_bugfix",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.10733210000000001,
+ "out_tok": 1319,
+ "in_tok": 10,
+ "cache_read": 183880,
+ "cache_write": 18901,
+ "turns": 9,
+ "secs": 16.0,
+ "answer_chars": 499,
+ "changed_lines": 1,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Fixed: all 3 tests pass.\n\n**Root cause:** `apply_discount` in `inventory.py:25` returned the discount amount (`price * percent / 100`), not the price after the discount. It now returns `price * (100 - percent) / 100`.\n\n`change.diff` isn't applied and didn't cause this failure. If you apply it, `remove_sold_out` has a bug of its own: it removes items from the list while looping over it, so it skips the element after each removal. Build a new list instead, e.g. `[i for i in items if i.qty != 0]`."
+}

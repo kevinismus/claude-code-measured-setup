@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T2_bugfix",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.09359609999999999,
+ "out_tok": 1061,
+ "in_tok": 8,
+ "cache_read": 142150,
+ "cache_write": 17156,
+ "turns": 5,
+ "secs": 13.2,
+ "answer_chars": 562,
+ "changed_lines": 1,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Fixed. All 3 tests pass.\n\n- **Root cause:** `apply_discount` in `inventory.py` returned `price * percent / 100`, which is the discount amount. Now it returns `price * (1 - percent / 100)`, the price after the discount. `apply_discount(100, 10)` gives 90, not 10.\n- **Tests:** I did not edit them.\n- **Unapplied diff:** `change.diff` adds `remove_sold_out`, which is not in `inventory.py`. If you apply it, it has a bug: it removes items from the list while looping over it, so it skips the item after each removal. Use `[i for i in items if i.qty != 0]` instead."
+}

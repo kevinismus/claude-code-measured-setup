@@ -1,0 +1,38 @@
+{
+ "cfg": "A_current",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.10013999999999999,
+ "out_tok": 926,
+ "in_tok": 4,
+ "cache_read": 67169,
+ "cache_write": 21006,
+ "turns": 2,
+ "secs": 10.6,
+ "answer_chars": 1222,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -A && wc -l *.py 2>/dev/null\", \"description\": \"List repo files\"}"
+ ],
+ "answer": "Repo tiny: `inventory.py` (30 lines), `test_inventory.py`, `stock.csv`. Keep CLAUDE.md under ~15 lines. Only what Claude can't read from code:\n\n```markdown\n# Inventory\n\nSmall Python lib: load `stock.csv`, compute totals, apply discounts.\n\n## Commands\n- Test: `python -m pytest -q` (or `python -m unittest` if no pytest)\n- Single test: `python -m pytest test_inventory.py::<name>`\n\n## Conventions\n- Stdlib only; ask before adding a dependency.\n- Every behaviour change gets a test in `test_inventory.py`.\n- Money: <Decimal or float? state which, and rounding rule>.\n\n## Gotchas\n- `stock.csv` columns: <name, qty, price?>. Header required? Bad row behaviour?\n- <Any non-obvious rule, e.g. discount stacking, negative qty>.\n```\n\nInclude:\n- Exact test command. Biggest win.\n- Money and rounding rule, CSV schema. Not inferable from 30 lines.\n- Dependency policy.\n\nSkip:\n- File tree, function list. Claude reads them.\n- Style rules a linter enforces.\n- Generic advice (\"write clean code\").\n\nFill the `<\u2026>` placeholders yourself; I did not read the code for the money type or CSV semantics. Not a git repo, so the global `.claude/settings.json` attribution rule not applied. Want me to read the files and draft the real version?"
+}

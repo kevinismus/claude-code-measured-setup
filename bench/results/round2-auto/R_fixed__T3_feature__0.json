@@ -1,0 +1,40 @@
+{
+ "cfg": "R_fixed",
+ "task": "T3_feature",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.11864209999999999,
+ "out_tok": 1337,
+ "in_tok": 8,
+ "cache_read": 155093,
+ "cache_write": 22404,
+ "turns": 4,
+ "secs": 17.8,
+ "answer_chars": 763,
+ "changed_lines": 19,
+ "style": "default",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la && cat inventory.py && ls .claude 2>/dev/null; cat .claude/settings.json 2>/dev/null; ls test* 2>/dev/null\"}",
+  "Bash:{\"command\": \"cat test_inventory.py change.diff\"}",
+  "Bash:{\"command\": \"cat >> inventory.py <<'EOF'\\n\\n\\ndef restock(items, sku, amount):\\n    \\\"\\\"\\\"Add `amount` to the qty of the item with `sku`; Ke"
+ ],
+ "answer": "`restock(items, sku, amount)` is added to `inventory.py`. It increases the matching item's qty and raises `KeyError(sku)` for an unknown sku. I added two tests to `test_inventory.py`, one for a successful restock and one for the `KeyError`, and both pass.\n\n- **Existing failure:** `test_apply_discount` was already failing before my change. `apply_discount` returns `price * percent / 100`, which is the discount amount, not the price after the discount. I left it alone since it wasn't part of the request.\n- **Settings file:** I created `.claude/settings.json` with the attribution keys, as your global rule requires for every repo.\n- **Not checked:** `restock` does no validation of `amount`, so a negative value will reduce stock. Say if you want it rejected."
+}

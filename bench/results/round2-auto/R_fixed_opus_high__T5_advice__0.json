@@ -1,0 +1,39 @@
+{
+ "cfg": "R_fixed_opus_high",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.2359423,
+ "out_tok": 1136,
+ "in_tok": 6,
+ "cache_read": 113376,
+ "cache_write": 23799,
+ "turns": 3,
+ "secs": 19.2,
+ "answer_chars": 1728,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la; for f in $(find . -maxdepth 2 -type f -not -path './.git/*' | head -30); do echo \\\"== $f\\\"; head -60 \\\"$f\\\"; done\", \"de",
+  "Bash:{\"command\": \"python3 --version; python3 -m unittest -q 2>&1 | tail -5\", \"description\": \"Check Python version and run tests\"}"
+ ],
+ "answer": "Keep it short, about 10 lines. Only include what Claude can't work out from 3 small files: how to run things, conventions, traps. Skip a code map, since `ls` covers that and a map goes stale.\n\nDraft:\n\n```markdown\n# inventory\n\nSmall stdlib-only inventory helpers (`inventory.py`) with CSV data (`stock.csv`).\n\n## Commands\n- Run tests: `python3 -m unittest -q` (Python 3.15, no dependencies, no venv).\n\n## Conventions\n- Standard library only; do not add dependencies.\n- Functions take and return plain lists of `Item`; do not mutate the input list, return a new one.\n- Prices are floats in currency units; percentages are 0\u2013100, not 0\u20131.\n- Every new or changed function gets a test in `test_inventory.py` (unittest, not pytest).\n\n## Gotchas\n- `stock.csv` columns are `sku,name,price,qty`; `load()` depends on that header.\n```\n\nWhy each part is there:\n- **Commands**: saves Claude guessing between pytest and unittest. It's the most useful line.\n- **No-mutation rule**: `change.diff` (`remove_sold_out`) removes items from the list while looping over it, so it skips some sold-out items. This rule prevents that kind of bug.\n- **0\u2013100 percent**: `apply_discount` is ambiguous without it.\n- I left out style rules, since a linter enforces those better than prose would.\n\nProblems found while looking:\n- **1 of 3 tests fails right now.** `apply_discount(100, 10)` returns `10` (the discount amount), not `90`. The fix is `price * (1 - percent / 100)`.\n- **`change.diff` has a bug.** `remove_sold_out` skips the next item after each removal. Fix: `return [i for i in items if i.qty > 0]`.\n\nI haven't written the file. Your global rules also want `.claude/settings.json` with the attribution block in this repo, and that's missing too."
+}

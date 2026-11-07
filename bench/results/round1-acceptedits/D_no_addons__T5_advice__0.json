@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.0721158,
+ "out_tok": 1106,
+ "in_tok": 2,
+ "cache_read": 23887,
+ "cache_write": 14633,
+ "turns": 1,
+ "secs": 12.7,
+ "answer_chars": 2227,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "**Recommendation: keep it under ~40 lines. Include only what Claude can't infer from the code.**\n\n**Include:**\n- **One-line purpose.** What the repo does and who uses it.\n- **Commands.** Exact commands for setup, run, test (including a single test), lint and format, and typecheck. Name the tool: `uv`, `pytest`, `ruff`, `mypy`/`pyright`. Example: `uv run pytest -x tests/test_foo.py`.\n- **Layout, only if non-obvious.** For example, \"src layout, entry point `src/pkg/cli.py`\".\n- **Conventions that differ from defaults.** Python version, type hints required, `pathlib` over `os.path`, the logging style, the error-handling pattern.\n- **Gotchas.** Env vars needed, which tests need network or services, generated files not to edit, and which dependency manager is canonical (don't use `pip install` if the repo uses `uv`).\n- **Definition of done.** For example, \"run `ruff check`, `ruff format` and `pytest` before finishing.\"\n- **Your global rule.** Add `.claude/settings.json` with `\"attribution\": { \"commit\": \"\", \"pr\": \"\", \"sessionUrl\": false }`.\n\n**Leave out:**\n- File-by-file descriptions or directory trees Claude can read itself.\n- Generic advice such as \"write clean code\" or \"add tests\".\n- Things already in `pyproject.toml`, the README, or enforced by ruff config. Point to those instead of copying them.\n- Long procedures. Put them in a separate file and reference it by path.\n- Anything that changes often, since stale lines cause mistakes.\n\n**Maintenance:** add a line only when Claude gets something wrong, and delete lines that no longer matter.\n\n**Starter skeleton:**\n```markdown\n# <name>\n<One line: what this does.>\n\n## Commands\n- Setup: `uv sync`\n- Test: `uv run pytest` (single: `uv run pytest path::test -x`)\n- Lint/format: `uv run ruff check --fix && uv run ruff format`\n- Types: `uv run mypy src`\n\n## Conventions\n- Python 3.12, full type hints, `pathlib`.\n- <One or two project-specific rules.>\n\n## Gotchas\n- <Env vars, slow or network tests, generated files.>\n\n## Done means\n- Lint, types and tests pass.\n```\n\nThe working directory here isn't a git repo and I haven't looked at its contents. If you want me to tailor the file to the actual code, point me at the repo and I'll run `/init`-style discovery."
+}

@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T3_feature",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.13018559999999998,
+ "out_tok": 2571,
+ "in_tok": 12,
+ "cache_read": 226968,
+ "cache_write": 20406,
+ "turns": 10,
+ "secs": 23.6,
+ "answer_chars": 920,
+ "changed_lines": 23,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "`restock` is added to `inventory.py` with three new tests, and all three pass. The suite as a whole still fails on one test I didn't touch.\n\n`restock(items, sku, amount)` adds `amount` to the matching item's `qty` and returns nothing. It raises `KeyError(sku)` for an unknown sku. The tests cover the qty increase, other items staying unchanged, and an unknown sku (which also checks that no qty changed).\n\nThe failure is `test_apply_discount`, and it was failing before my change. `apply_discount` returns `price * percent / 100`, which is the discount amount (10.0), not the discounted price (90). The fix is `price * (100 - percent) / 100`. I left it alone since you didn't ask; say if you want it fixed.\n\n`change.diff` in the same folder adds a `remove_sold_out` function that isn't in `inventory.py`, and I didn't apply it. It also has a bug: it removes items from the list while looping over it, so it skips items."
+}

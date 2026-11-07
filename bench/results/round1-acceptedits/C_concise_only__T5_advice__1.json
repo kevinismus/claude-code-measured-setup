@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T5_advice",
+ "rep": 1,
+ "ok": null,
+ "cost": 0.07660539999999999,
+ "out_tok": 1079,
+ "in_tok": 2,
+ "cache_read": 23363,
+ "cache_write": 15836,
+ "turns": 1,
+ "secs": 13.3,
+ "answer_chars": 1523,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Keep it under about 30 lines. Include only what Claude can't infer from reading the code.\n\n**Include**\n- **Purpose:** one line saying what the repo does.\n- **Exact commands:** setup, run, full tests, single test, lint/format, typecheck. These are the highest-value lines.\n- **Non-default conventions:** Python version, package manager (uv/pip), type-hint policy, logging instead of `print`, `pathlib`.\n- **Gotchas:** required env vars, external services, slow or flaky tests, generated files.\n- **Boundaries:** never commit `.env`, ask before adding dependencies, don't edit generated code.\n- **Done criteria:** tests and lint pass before reporting finished.\n\n**Skip**\n- Directory trees, unless a layout is genuinely non-obvious.\n- Generic style rules that ruff or black already enforce.\n- README duplication and long prose.\n\n**Skeleton**\n```markdown\n# <repo>\n<One-line purpose.>\n\n## Commands\n- Setup: `uv sync`\n- Run: `uv run python -m <pkg>`\n- Test: `uv run pytest` (single: `uv run pytest tests/test_x.py::test_y`)\n- Lint/format: `uv run ruff check --fix . && uv run ruff format .`\n- Types: `uv run mypy src`\n\n## Conventions\n- Python 3.12; type hints on public functions.\n- Use `logging`, not `print`.\n\n## Gotchas\n- <env var / service / flaky test>\n\n## Rules\n- Ask before adding dependencies.\n- Never commit `.env`.\n- Run tests and lint before saying done.\n```\n\nAdd a line only after Claude gets something wrong, and delete lines that stop mattering. I can generate this from the real repo with `/init` and then trim it."
+}

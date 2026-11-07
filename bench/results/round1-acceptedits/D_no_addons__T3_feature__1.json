@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T3_feature",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.0906521,
+ "out_tok": 1269,
+ "in_tok": 6,
+ "cache_read": 102033,
+ "cache_write": 16904,
+ "turns": 3,
+ "secs": 14.2,
+ "answer_chars": 715,
+ "changed_lines": 25,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "`restock(items, sku, amount)` is added to `inventory.py`, and the three new tests pass. It adds `amount` to the matching item's `qty` and raises `KeyError(sku)` for an unknown sku.\n\nThe new tests in `test_inventory.py` cover three cases: qty increases, other items are untouched, and an unknown sku raises `KeyError`.\n\nOne existing test, `test_apply_discount`, fails, and I didn't touch it. `apply_discount` returns `price * percent / 100`, which is the discount amount, not the price after the discount. `apply_discount(100, 10)` gives 10 where the test expects 90. The fix is `price * (100 - percent) / 100`. Want me to make it?\n\nI didn't add `.claude/settings.json` because this directory isn't a git repository."
+}

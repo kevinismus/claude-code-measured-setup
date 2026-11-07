@@ -1,0 +1,39 @@
+{
+ "cfg": "R_fixed",
+ "task": "T4_review",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.10661839999999999,
+ "out_tok": 1070,
+ "in_tok": 6,
+ "cache_read": 110391,
+ "cache_write": 21185,
+ "turns": 3,
+ "secs": 15.4,
+ "answer_chars": 1126,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"cd \\\"<run-dir>",
+  "Bash:{\"command\": \"cd \\\"<run-dir>"
+ ],
+ "answer": "Bugs in `change.diff`, not applied:\n\n1. **High: `remove_sold_out` skips items.** It removes from `items` while iterating over it. After each `remove`, the next element shifts into the removed slot and the loop skips it. With `qty` values `[0, 0, 5]`, the second 0-qty item stays in the list.\n   - Fix: `items[:] = [i for i in items if i.qty != 0]`. This keeps the in-place semantics, runs in O(n), and removes the `remove` equality problem below.\n2. **Low: `items.remove(i)` matches by equality.** `Item` is a dataclass, so `eq` compares by value. It deletes the first equal item, which may not be the one being iterated. The comprehension fix removes this problem too.\n3. **Low: `qty == 0` misses negative `qty`.** Oversold stock stays in the list. Use `i.qty <= 0` if that matters.\n4. **Test gap: the diff adds no test.** It needs one with consecutive zero-qty items, which would have caught bug 1.\n\nNot in the diff: `apply_discount` in `inventory.py` returns `price * percent / 100`, which is the discount amount, not the price after the discount. `test_apply_discount` expects 90 and would get 10. I did not run the tests."
+}

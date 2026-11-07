@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T4_review",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.0857159,
+ "out_tok": 1129,
+ "in_tok": 6,
+ "cache_read": 101546,
+ "cache_write": 16033,
+ "turns": 3,
+ "secs": 14.3,
+ "answer_chars": 1531,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "**Verdict: the change has a bug and should not ship as written.**\n\n**1. `remove_sold_out` skips items (`change.diff`, +33 to +36)**\n- It calls `items.remove(i)` while looping over `items`. Each removal shifts the list left, so the iterator jumps over the next element.\n- Example: `[A(qty 0), B(qty 0), C(qty 5)]` returns `[B, C]`. B is still there because it was skipped right after A was removed.\n- Any run of consecutive sold-out items is only partly removed. The function reports success and gives no error.\n- Fix, in place: `items[:] = [i for i in items if i.qty > 0]`. This keeps the \"in place\" contract and runs in O(n).\n- `list.remove` is also O(n) per call and matches by dataclass `==`, not identity. So it can remove a different but equal item. The slice assignment avoids both problems.\n\n**2. Smaller points**\n- `== 0` misses negative quantities, for example after an oversell. Use `<= 0` if negative stock can occur.\n- The diff adds no test. Add one with two adjacent zero-qty items, since that case would catch bug 1.\n- The function both mutates its argument and returns it. That is easy to misread as returning a copy. Pick one behaviour and document it.\n\n**3. Existing bug, not part of this diff**\n- `apply_discount` in `inventory.py` returns `price * percent / 100`, which is the discount amount, not the price after the discount. `test_apply_discount` expects 90 for `(100, 10)` but gets 10, so that test fails today. The fix is `price * (100 - percent) / 100`.\n\nI did not apply anything and did not run the tests."
+}

@@ -1,0 +1,33 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T2_bugfix",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.08865,
+ "out_tok": 693,
+ "in_tok": 8,
+ "cache_read": 141849,
+ "cache_write": 16847,
+ "turns": 5,
+ "secs": 11.7,
+ "answer_chars": 458,
+ "changed_lines": 1,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la; python3 -m unittest 2>&1 | head -50\"}",
+  "Bash:{\"command\": \"cat inventory.py change.diff test_inventory.py stock.csv\"}",
+  "Edit:{\"replace_all\": false, \"file_path\": \"<run-dir>",
+  "Bash:{\"command\": \"python3 -m unittest 2>&1 | tail -5\"}"
+ ],
+ "answer": "Fixed. All 3 tests pass.\n\n**Root cause:** `apply_discount` in `inventory.py` returned the discount amount, not the discounted price. `100` at `10%` gave `10`, not `90`.\n\n**Fix:** it now returns `price * (1 - percent / 100)`. I didn't touch the tests.\n\n**Risk:** `change.diff` is not applied to `inventory.py`. Its `remove_sold_out` removes items from the list while looping over it, which skips the item after each removal. Fix that before applying the diff."
+}

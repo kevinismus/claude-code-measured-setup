@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.0743354,
+ "out_tok": 852,
+ "in_tok": 2,
+ "cache_read": 23363,
+ "cache_write": 15836,
+ "turns": 1,
+ "secs": 11.7,
+ "answer_chars": 1535,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Keep it under ~40 lines. Include only what Claude can't infer from the code, or would get wrong.\n\n**Include**\n- **Commands:** exact commands for setup, run, test (single test too), lint, format and typecheck. Example: `uv sync`, `uv run pytest -x tests/test_foo.py`, `uv run ruff check --fix && uv run ruff format`, `uv run mypy src`.\n- **Tooling choice:** which package manager and runner to use, and what to avoid. Example: \"uv only, never bare `pip`\". Include the Python version if it matters.\n- **Layout, only if non-obvious:** one line each for entry point, `src/` vs flat layout, where tests live.\n- **Conventions that differ from defaults:** type hints required, `pathlib` over `os.path`, logging rather than `print`, docstring style, and the line length if it isn't in the ruff config.\n- **Gotchas:** required env vars (names only, never values), the fact that tests hit a real service or need a fixture, and generated files not to edit by hand.\n- **Definition of done:** \"Run tests and lint before saying finished.\"\n\n**Leave out**\n- Anything already in `pyproject.toml`, the README or the code. Skip directory trees, dependency lists and a project description.\n- Generic advice such as \"write clean code\" or \"add tests\".\n- Anything that goes stale quickly, such as file-by-file descriptions.\n\n**Upkeep:** add a line only when Claude makes a mistake you'd otherwise correct twice. Delete lines that no longer prevent a mistake.\n\nI didn't inspect the repo. If you want, I can draft one from the real `pyproject.toml` and layout."
+}

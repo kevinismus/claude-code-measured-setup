@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T4_review",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.08310390000000001,
+ "out_tok": 850,
+ "in_tok": 6,
+ "cache_read": 101566,
+ "cache_write": 16077,
+ "turns": 3,
+ "secs": 12.0,
+ "answer_chars": 1254,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Findings, by severity.\n\n**1. Bug in the diff: `remove_sold_out` skips items while mutating the list it iterates.**\n`inventory.py` (the new function) calls `items.remove(i)` inside `for i in items`. Removing an element shifts the rest left, so the iterator skips the item that follows each removal. With two adjacent sold-out items, `[A(0), B(0), C(5)]` returns `[B(0), C(5)]` and B stays in the list. `remove()` also deletes the first element that compares equal. Because `Item` is a dataclass with value equality, that can be a different but equal object. It is also O(n\u00b2).\nFix: iterate over a copy and keep the in-place contract:\n```python\nitems[:] = [i for i in items if i.qty != 0]\nreturn items\n```\nUse `qty <= 0` if negative quantities are possible.\n\n**2. The new function has no test.** `test_inventory.py` isn't touched, and the adjacent-zeros case above would have caught the bug.\n\n**3. Existing bug in `apply_discount`, outside the diff.** `price * percent / 100` returns the discount amount, not the price after the discount. The docstring says it returns the price after taking `percent` off, and `apply_discount(100, 10)` gives 10. The test expects 90, so it fails today. The fix is `price * (100 - percent) / 100`.\n\nI did not apply anything."
+}

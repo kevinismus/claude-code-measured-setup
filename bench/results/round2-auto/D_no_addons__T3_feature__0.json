@@ -1,0 +1,32 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T3_feature",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.0999139,
+ "out_tok": 1320,
+ "in_tok": 8,
+ "cache_read": 141751,
+ "cache_write": 18098,
+ "turns": 4,
+ "secs": 13.6,
+ "answer_chars": 713,
+ "changed_lines": 22,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la && cat inventory.py && ls .claude 2>/dev/null; cat .claude/settings.json 2>/dev/null; ls test* 2>/dev/null\"}",
+  "Bash:{\"command\": \"cat test_inventory.py; cat change.diff\"}",
+  "Bash:{\"command\": \"cat >> inventory.py <<'EOF'\\n\\n\\ndef restock(items, sku, amount):\\n    \\\"\\\"\\\"Increase the qty of the item with `sku` by `amount"
+ ],
+ "answer": "`restock(items, sku, amount)` is now in `inventory.py`. It adds `amount` to the matching item's `qty`, returns the item, and raises `KeyError(sku)` for an unknown sku.\n\nI added three tests to `test_inventory.py`: qty increases, other items are left alone, and an unknown sku raises `KeyError`. All three pass.\n\nOne test still fails, and it was failing before my change: `test_apply_discount`. `apply_discount(100, 10)` returns 10.0, but the test expects 90. The function returns `price * percent / 100`, which is the discount amount rather than the discounted price. I left it alone since it's outside this task. Fixing it means changing the function to `price * (100 - percent) / 100`. Say if you want that done."
+}

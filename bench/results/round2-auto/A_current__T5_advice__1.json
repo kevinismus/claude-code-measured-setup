@@ -1,0 +1,38 @@
+{
+ "cfg": "A_current",
+ "task": "T5_advice",
+ "rep": 1,
+ "ok": null,
+ "cost": 0.10267589999999999,
+ "out_tok": 970,
+ "in_tok": 4,
+ "cache_read": 67168,
+ "cache_write": 21530,
+ "turns": 2,
+ "secs": 11.8,
+ "answer_chars": 1376,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -a; ls .claude 2>/dev/null; head -40 *.py 2>/dev/null | head -80\", \"description\": \"List repo files and peek at Python source"
+ ],
+ "answer": "Keep it under ~15 lines. Only what Claude can't infer from reading the code:\n\n1. **Commands**: `python -m unittest` (stdlib `unittest`, no pytest, no deps, no build step). Tests run from repo root because `test_inventory.py` imports `inventory` directly.\n2. **Layout**: one module `inventory.py`, tests in `test_inventory.py`, sample data in `stock.csv` (columns `sku,name,price,qty`). Skip the file-by-file tour. Claude can read 40 lines.\n3. **Conventions that differ from defaults**: stdlib only, no new dependencies; every new function gets a test in the existing `InventoryTest` class; prices are `float` (note it if you want `Decimal` later).\n4. **Gotchas**: `__pycache__/` and `change.diff` are scratch, not source. Don't commit them (no `.gitignore` yet, and it isn't a git repo).\n5. **Don't include**: generic Python advice, style rules a formatter enforces, anything already in your global CLAUDE.md.\n\nSeparate from CLAUDE.md, add `.claude/settings.json` with the attribution keys your global file requires.\n\nBug noticed while reading, unrelated to CLAUDE.md: `apply_discount` returns `price * percent / 100`, the discount amount, not the discounted price. `apply_discount(100, 10)` gives `10`, so `test_apply_discount` expects `90` and fails. The fix is `price * (100 - percent) / 100`. I haven't changed it.\n\nI can write the CLAUDE.md and settings file if you want."
+}

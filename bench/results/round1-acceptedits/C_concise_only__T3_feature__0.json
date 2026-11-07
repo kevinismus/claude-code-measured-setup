@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T3_feature",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.12659420000000002,
+ "out_tok": 2326,
+ "in_tok": 12,
+ "cache_read": 226154,
+ "cache_write": 20141,
+ "turns": 9,
+ "secs": 22.2,
+ "answer_chars": 768,
+ "changed_lines": 23,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "`restock` is added to `inventory.py` and the three new tests pass. One existing test, `test_apply_discount`, fails.\n\n`restock(items, sku, amount)` adds `amount` to the matching item's `qty` and returns that item. It raises `KeyError(sku)` for an unknown sku.\n\nThe tests cover three cases:\n- The matching item's qty goes up.\n- Other items are unchanged.\n- An unknown sku raises `KeyError` and changes nothing.\n\nThe `test_apply_discount` failure was there before my change, and I left it alone. `apply_discount` in `inventory.py` returns `price * percent / 100`, which is the discount amount, not the price after the discount. `apply_discount(100, 10)` returns 10.0 where the test expects 90. The fix is `price * (100 - percent) / 100`. Say so if you want me to make it."
+}

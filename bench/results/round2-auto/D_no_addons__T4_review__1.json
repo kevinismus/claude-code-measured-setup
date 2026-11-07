@@ -1,0 +1,31 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T4_review",
+ "rep": 1,
+ "ok": true,
+ "cost": 0.086904,
+ "out_tok": 1223,
+ "in_tok": 6,
+ "cache_read": 101587,
+ "cache_write": 16094,
+ "turns": 3,
+ "secs": 12.5,
+ "answer_chars": 1624,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la && cat change.diff\", \"description\": \"List directory and show diff\"}",
+  "Bash:{\"command\": \"cat inventory.py test_inventory.py stock.csv\", \"description\": \"Show source, tests, data\"}"
+ ],
+ "answer": "**Bug in `remove_sold_out` (change.diff, new function):** it removes items from the list while looping over that same list. Each `remove` shifts the later items left, and the loop's index then skips the item that moved into the removed slot.\n\n- Input `[Item(qty=0), Item(qty=0), Item(qty=3)]`: the first zero is removed, the second zero slides into index 0 and is never checked, so it stays. The function returns a list that still holds a sold-out item.\n- Any run of two or more adjacent sold-out items hits this. A lone zero works, so a quick manual check would pass.\n\n**Fix:** keep the in-place behaviour with slice assignment, which also avoids the O(n\u00b2) cost of repeated `remove`:\n\n```python\nitems[:] = [i for i in items if i.qty != 0]\nreturn items\n```\n\n**Smaller points:**\n- `.remove(i)` matches by dataclass equality, not identity. With duplicate-equal items it can remove a different but equal object than the one it matched. The slice-assignment fix avoids this.\n- `qty == 0` leaves negative quantities (for example, oversold items) in the list. `<= 0` may be what you want.\n- The change adds no test, and the missing test is how the skip bug would have been caught. Add one with consecutive zero-qty items.\n\n**Existing bug, not in this diff:** `apply_discount` in `inventory.py` returns `price * percent / 100`. That is the discount amount, not the price after the discount. `test_apply_discount` expects 90 for `(100, 10)` but gets 10, so it fails today. The correct formula is `price * (100 - percent) / 100`.\n\nI did not apply anything. I also did not run the tests; I read `inventory.py` and `test_inventory.py`."
+}

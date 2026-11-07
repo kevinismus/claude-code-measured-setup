@@ -1,0 +1,30 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T4_review",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.0736284,
+ "out_tok": 722,
+ "in_tok": 4,
+ "cache_read": 62411,
+ "cache_write": 15008,
+ "turns": 2,
+ "secs": 7.5,
+ "answer_chars": 1379,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Read:{\"file_path\": \"<run-dir>"
+ ],
+ "answer": "**Bug: `remove_sold_out` mutates the list while iterating over it** (`inventory.py`, new lines 8\u201313).\n\n- `items.remove(i)` shifts later elements left. The loop's index then moves past the element that slid into the removed slot, so it skips it.\n- Example: with quantities `[0, 0, 3]`, the first `0` is removed, the second `0` is skipped, and the result is `[0, 3]`. Any run of consecutive sold-out items is only partly removed.\n- `list.remove` also compares by equality and removes the first match. If `Item` defines `__eq__`, it could remove a different item from the one being visited. It is O(n) per call as well, so the whole function is O(n\u00b2).\n\n**Fix, keeping the in-place behaviour:**\n```python\ndef remove_sold_out(items):\n    \"\"\"Drop items with no stock left, in place.\"\"\"\n    items[:] = [i for i in items if i.qty != 0]\n    return items\n```\n\n**Minor:**\n- `== 0` misses negative quantities, which can happen with oversold stock. If those count as sold out, use `<= 0`. `low_stock` just above uses `< threshold`, so that may be the intended style.\n- Returning the same list that was mutated is easy to misread as a copy. Consider returning `None`, or dropping the in-place behaviour and returning a new list, like `low_stock` does.\n- The change adds no tests. A case with consecutive zero-qty items would have caught the skip bug.\n\nI haven't applied anything, as requested."
+}

@@ -1,0 +1,39 @@
+{
+ "cfg": "R_fixed_opus_xhigh",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.2698587,
+ "out_tok": 2500,
+ "in_tok": 6,
+ "cache_read": 113558,
+ "cache_write": 24624,
+ "turns": 3,
+ "secs": 31.0,
+ "answer_chars": 1731,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "caveman",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "ponytail",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [
+  "Bash:{\"command\": \"ls -la && for f in $(find . -type f -not -path '*/.git/*' | head -30); do echo \\\"=== $f\\\"; head -60 \\\"$f\\\"; done\", \"description",
+  "Bash:{\"command\": \"python3 --version && python3 -B -m unittest -q 2>&1 | tail -8\", \"description\": \"Check Python version and run the test suite\"}"
+ ],
+ "answer": "A short CLAUDE.md is best for this repo, around 10 lines. Only include what Claude can't work out from reading the code: how to run the tests, the rules it should follow, and any traps.\n\nRecommended `CLAUDE.md`:\n\n```markdown\n# inventory\n\nStandard-library-only Python 3 helpers for a CSV stock list. Code is in `inventory.py`, tests in `test_inventory.py`, sample data in `stock.csv`.\n\n## Commands\n- Run tests: `python3 -m unittest -v`\n- There is no build step and no dependencies. Ask before adding a package.\n\n## Conventions\n- Tests use `unittest`, not pytest. Add or update a test for every function you add or change.\n- Helpers return a new list and never modify the list passed in.\n```\n\nWhy each line is there:\n- **Test command**: without it, Claude guesses `pytest`, which isn't installed or used here.\n- **Stdlib only**: stops Claude adding pandas or a similar package for CSV work.\n- **No mutation**: `low_stock` already returns a new list. The new `remove_sold_out` in `change.diff` breaks this rule, so the line is there to catch that.\n\nLeave out:\n- A file-by-file or function list. Claude can read 3 files itself.\n- Style rules that a formatter or linter would enforce.\n- General advice like \"write clean code\".\n- `/init` output. It's too long for a repo this size.\n\nAdd a line only when Claude makes the same mistake twice.\n\nI didn't create the file, since this was advice only. The tests currently fail: `apply_discount(100, 10)` returns `10.0` instead of `90`, because it returns the discount amount rather than the price after the discount, which its docstring says. `remove_sold_out` in `change.diff` removes items from the list while looping over it, so it misses a sold-out item that comes right after another one."
+}

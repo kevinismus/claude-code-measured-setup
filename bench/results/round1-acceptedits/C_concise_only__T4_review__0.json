@@ -1,0 +1,33 @@
+{
+ "cfg": "C_concise_only",
+ "task": "T4_review",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.0840323,
+ "out_tok": 752,
+ "in_tok": 6,
+ "cache_read": 102050,
+ "cache_write": 16542,
+ "turns": 3,
+ "secs": 11.9,
+ "answer_chars": 1072,
+ "changed_lines": 0,
+ "style": "Concise",
+ "plugins": [
+  "agentic-utils-svelte-lsp",
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "cc-plugin-you-should-know",
+  "codex",
+  "frontend-design",
+  "infra-band",
+  "pstack",
+  "pyright-lsp",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "**Bug: `remove_sold_out` mutates the list while iterating it, so it skips items.**\n\nRemoving an element shifts the rest left, and the iterator then moves past the item that slid into the removed slot. With `[A(0), B(0), C(3)]`, it removes A, skips B and leaves `[B(0), C(3)]`. Any run of consecutive sold-out items is only partly removed.\n\n`items.remove(i)` also removes the first element that compares equal to `i`. If `Item` defines `__eq__` (a dataclass does by default), that can be a different object with the same field values. It is also O(n) per call.\n\nFix, keeping the in-place contract:\n\n```python\ndef remove_sold_out(items):\n    items[:] = [i for i in items if i.qty != 0]\n    return items\n```\n\nTwo smaller points:\n- `qty == 0` misses negative quantities (oversold). `low_stock` uses `< threshold`, so `qty <= 0` is probably the intent.\n- Returning the mutated list as well as mutating it invites confusion. Return `None` or build a new list.\n\nI didn't apply anything. I also couldn't see the rest of `inventory.py`, so the `Item` equality point is unconfirmed."
+}

@@ -1,0 +1,28 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T5_advice",
+ "rep": 0,
+ "ok": null,
+ "cost": 0.0724018,
+ "out_tok": 1131,
+ "in_tok": 2,
+ "cache_read": 23887,
+ "cache_write": 14642,
+ "turns": 1,
+ "secs": 10.7,
+ "answer_chars": 2215,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "tools": [],
+ "answer": "Keep it under ~30 lines. Include only what Claude can't get from reading the code.\n\n**Include**\n- **Commands:** exact install, test, lint, format, typecheck and run commands. Example: `uv run pytest -q`, `uv run ruff check .`, `uv run ruff format .`. Name the package manager, because this is the most common mistake (uv vs pip vs poetry).\n- **Single-test command:** how to run one test file or one test.\n- **Python version and tooling:** the version pin, plus the type checker if one is used (mypy or pyright) and whether it is strict.\n- **Layout quirks:** only non-obvious ones, such as `src/` layout, where the entry point is, or generated files not to edit.\n- **Conventions that differ from defaults:** for example, \"use `pathlib`, not `os.path`\", \"no print, use `logging`\", or \"pytest fixtures in `conftest.py`, no unittest\".\n- **Gotchas:** env vars needed, services tests depend on, slow or flaky tests, and anything that fails silently.\n- **Definition of done:** \"run tests, ruff and typecheck before reporting done\".\n\n**Leave out**\n- Directory tree dumps, file-by-file descriptions, and anything `ls` or the README already shows.\n- Generic advice such as \"write clean code\" or \"add docstrings\".\n- Long procedures. Put them in a separate file and reference it by path.\n- Anything about you personally. That belongs in `~/.claude/CLAUDE.md`.\n\n**Template**\n```markdown\n# <repo name>\n\nOne line: what it does.\n\n## Commands\n- Install: `uv sync`\n- Test: `uv run pytest -q` (one: `uv run pytest path::test_name`)\n- Lint/format: `uv run ruff check . && uv run ruff format .`\n- Types: `uv run mypy src`\n\n## Conventions\n- Python 3.12, type hints on public functions.\n- <only the rules that differ from defaults>\n\n## Gotchas\n- <env vars, flaky tests, generated files>\n\n## Done means\nTests, ruff and mypy pass.\n```\n\n**Maintenance:** add a line only after Claude makes a mistake that the line would have prevented. Delete lines that no longer apply.\n\n**Action for you:** your global rules require `.claude/settings.json` with the empty `attribution` block in every repo. This directory isn't a git repo and has no such file. Tell me if you want me to create both that file and the CLAUDE.md from a quick scan of the code."
+}

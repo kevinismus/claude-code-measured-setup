@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T2_bugfix",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.09236839999999999,
+ "out_tok": 1051,
+ "in_tok": 8,
+ "cache_read": 141673,
+ "cache_write": 16886,
+ "turns": 5,
+ "secs": 13.6,
+ "answer_chars": 564,
+ "changed_lines": 1,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Fixed. All 3 tests pass.\n\n- **Root cause:** `apply_discount` in `inventory.py` returned the discount amount (`price * percent / 100`), not the price after the discount. `apply_discount(100, 10)` gave 10 instead of 90.\n- **Fix:** it now returns `price * (100 - percent) / 100`. I didn't touch the tests.\n- **Not applied:** `change.diff` adds a `remove_sold_out` function that isn't in `inventory.py`. If you apply it, it has a bug. It removes items from the list while looping over it, so it skips the item after each removal. A list comprehension would avoid that."
+}

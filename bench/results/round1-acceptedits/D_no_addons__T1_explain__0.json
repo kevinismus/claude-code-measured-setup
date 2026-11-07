@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T1_explain",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.0588371,
+ "out_tok": 483,
+ "in_tok": 6,
+ "cache_read": 105621,
+ "cache_write": 10825,
+ "turns": 3,
+ "secs": 9.0,
+ "answer_chars": 575,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "No. `low_stock` in `inventory.py:30` filters with `i.qty < threshold`, a strict comparison. An item with `qty == threshold` (for example qty 5 at the default threshold of 5) is excluded. Only items strictly below the threshold are returned.\n\nIf you want items at the threshold to count as low stock, change it to `<=`. The docstring (\"Items that need reordering\") doesn't say which behaviour is intended.\n\nI also noticed that `apply_discount` (line 25) returns `price * percent / 100`, which is the discount amount, not the price after the discount. I didn't change anything."
+}

@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T5_advice",
+ "rep": 1,
+ "ok": null,
+ "cost": 0.07226179999999999,
+ "out_tok": 1121,
+ "in_tok": 2,
+ "cache_read": 23887,
+ "cache_write": 14632,
+ "turns": 1,
+ "secs": 13.6,
+ "answer_chars": 2397,
+ "changed_lines": 0,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Keep it under about 40 lines. Include only what Claude can't work out from the code.\n\n**Put in:**\n- **One-line purpose.** What the repo does and who uses it.\n- **Commands.** Exact setup, run, test (single test too), lint, format and type-check commands. For example `uv sync`, `uv run pytest -x tests/test_x.py`, `uv run ruff check --fix`, `uv run mypy src`.\n- **Toolchain choices.** Python version, package manager (uv, pip or poetry), and \"use `uv add`, never `pip install`\".\n- **Layout, only if non-obvious.** For example \"`src/` layout, entry point `src/pkg/cli.py`\".\n- **Conventions that differ from defaults.** Examples: type hints required, `pathlib` over `os.path`, `logging` not `print`, pytest style, docstring style.\n- **Gotchas.** Required env vars, which tests need network or a DB, slow tests to skip, generated files not to edit.\n- **Boundaries.** What not to touch (vendored code, lockfile by hand, migrations) and what needs asking first.\n- **Definition of done.** For example \"tests, ruff and mypy pass before finishing\".\n\n**Leave out:**\n- Directory trees and file descriptions. Claude can read them.\n- Generic Python advice such as PEP 8 or \"write clean code\".\n- Anything ruff or mypy config already enforces. Point to the config instead.\n- Long procedures. Put those in a separate file and reference it by path.\n- Anything stale. Wrong lines are worse than missing ones.\n\n**Starter skeleton:**\n\n```markdown\n# <repo>\n<One sentence: what it is.>\n\n## Commands\n- Setup: `uv sync`\n- Test: `uv run pytest` (one test: `uv run pytest path::name`)\n- Lint/format: `uv run ruff check --fix && uv run ruff format`\n- Types: `uv run mypy src`\n\n## Conventions\n- Python 3.12, `src/` layout, full type hints.\n- <Only the non-default rules.>\n\n## Gotchas\n- <Env vars, slow or network tests, generated files.>\n\n## Done means\n- pytest, ruff and mypy all pass.\n```\n\n**Process:** start with this and add a line only when Claude makes a mistake that the line would have prevented. If a line wouldn't have changed any past behaviour, delete it. `/init` can draft a first version, but trim it hard, because it tends to over-describe.\n\nThis directory has no files and isn't a git repo, so I couldn't tailor the skeleton to your code. If you point me at the actual repo, I'll draft it. Your global rules also require `.claude/settings.json` with the attribution keys, and I can add that when we set it up."
+}

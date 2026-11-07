@@ -1,0 +1,27 @@
+{
+ "cfg": "D_no_addons",
+ "task": "T3_feature",
+ "rep": 0,
+ "ok": true,
+ "cost": 0.09046369999999998,
+ "out_tok": 1214,
+ "in_tok": 6,
+ "cache_read": 102009,
+ "cache_write": 16995,
+ "turns": 3,
+ "secs": 13.2,
+ "answer_chars": 694,
+ "changed_lines": 20,
+ "style": "default",
+ "plugins": [
+  "cc-plugin-agents-md",
+  "cc-plugin-plugin-authoring",
+  "cc-plugin-privacy",
+  "cc-plugin-telemetry",
+  "infra-band",
+  "usage-hud"
+ ],
+ "error": false,
+ "rc": 0,
+ "answer": "Done. `restock(items, sku, amount)` is in `inventory.py`. It adds `amount` to the matching item's `qty`, returns the item, and raises `KeyError(sku)` for an unknown sku.\n\nI added two tests to `test_inventory.py`: one for increasing qty, one for the unknown sku, which also checks that no quantities changed. Both pass.\n\nRisks:\n- `test_apply_discount` was already failing before my change. `apply_discount` returns `price * percent / 100`, so `apply_discount(100, 10)` gives 10 instead of 90. I left it alone. Say if you want it fixed.\n- `restock` doesn't validate `amount`, so negative or zero values are accepted.\n- This directory isn't a git repo, so I skipped adding `.claude/settings.json`."
+}
